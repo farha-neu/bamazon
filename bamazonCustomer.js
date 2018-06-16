@@ -4,6 +4,7 @@ const {table} = require('table');
 var chalk = require("chalk");
 
 var data = [];
+var idArray = [];
 var data, output;
 headerText = chalk.cyanBright;
 
@@ -22,7 +23,8 @@ var connection = mysql.createConnection({
   });
 
   function displayItems(){
-    var query = connection.query("SELECT * FROM products ORDER BY product_name", function(err, res){
+    data = [];
+    var query = connection.query("SELECT * FROM products WHERE stock_quantity > 0 ORDER BY product_name", function(err, res){
         console.log(chalk.yellow("\nList of Bamazon Products for Sale"));
         var header = [headerText('Item ID'),headerText('NAME'),headerText('PRICE')];
         data.push(header);
@@ -35,6 +37,9 @@ var connection = mysql.createConnection({
          }       
          output = table(data);
          console.log(output);
+         for(var i = 1; i < data.length; i++){
+           idArray.push(data[i][0]);
+         }
          selectItem();
     });
   }
@@ -44,12 +49,17 @@ var connection = mysql.createConnection({
     .prompt({
           type: 'input',
           name: 'itemId',
-          message: "Please type the Item ID of the product you want to buy:",
+          message: "Please enter 8 digit item ID of the product you want to buy:",
           validate: function(input){
-            if(input) {
-              return true;
+            if(!input.trim()){
+              return "Please enter an item ID:";
             }
-            return "Please enter an Item ID:";
+            else if(idArray.indexOf(input.trim()) > -1){
+                return true;
+            }
+            else{
+              return "Please enter a valid item Id:";
+            }
           }
         })    
        .then(answers => {
@@ -59,6 +69,7 @@ var connection = mysql.createConnection({
       });
   }
 
+  
   function selectQuantity(itemId){
     inquirer
     .prompt({
@@ -66,43 +77,77 @@ var connection = mysql.createConnection({
           name: 'quantity',
           message: "Enter quantity:",
           validate: function(input){
-            if(input) {
+            if(Number.isInteger(parseInt(input))){
+              if(parseInt(input)<0){
+                return "Quantity cannot be zero. Please enter a valid quantity:"
+              }
               return true;
             }
-            return "Please enter quantity:";
+            return "Please enter a number:";
           }
         })    
        .then(answers => {
-           console.log(answers["quantity"]);
            var quantity = answers["quantity"];
            buyItem(itemId, quantity);
       });
   }
 
   function buyItem(itemId, quantity){
-    var query = connection.query("SELECT * FROM products WHERE ?", { item_id: itemId}, function(err, res){
-       var itemName = res[0].product_name;
-       var stockQuantity = res[0].stock_quantity;
-       var price = res[0].price;
-       if(quantity <= stockQuantity){
-           updateQuantity(itemId, itemName, quantity, stockQuantity,price);
-       }
-       else{
-           console.log("Insufficient Quantity!");
-       }
-    });
-  }
+    inquirer.prompt([
+      {
+        type: "confirm",
+        name: "placeOrder",
+        message: "Do you want to place an order?"
+      }, 
+    ]).then(function(user){
+    if(user.placeOrder){
+        var query = connection.query("SELECT * FROM products WHERE ?", { item_id: itemId}, function(err, res){
+          var itemName = res[0].product_name;
+          var stockQuantity = res[0].stock_quantity;
+          var price = res[0].price;
+              if(quantity <= stockQuantity){
+                var updatedQuantity = stockQuantity - quantity; 
+                var query = connection.query("UPDATE products SET ? WHERE ?", 
+                [
+                {stock_quantity: updatedQuantity},
+                {item_id: itemId}
+                ], 
+                function(err, res){
+                  console.log("\nYour order is placed!");
+                  console.log("Here's your Invoice:");
+                  console.log(itemName+"("+quantity+")");
+                  console.log("Totol cost: $"+price+" x "+quantity+" = $"+(price*quantity));
+                  console.log("Thank you for shopping with Bamazon!");
+                  buyAnother();
+            });
+          }
+          else{
+              console.log("Insufficient Quantity!");
+              buyAnother();
+          }        
+      });
+    }
+    else{
+      console.log("Your order is not placed");
+      buyAnother();
+    }
+  });
+}
 
-  function updateQuantity(itemId,itemName,quantity,stockQuantity,price){
-       var updatedQuantity = stockQuantity - quantity; 
-       var query = connection.query("UPDATE products SET ? WHERE ?", 
-       [
-        {stock_quantity: updatedQuantity},
-        {item_id: itemId}
-       ], 
-       function(err, res){
-         console.log("Your Invoice:");
-         console.log(itemName+"............"+quantity);
-         console.log("Totol cost: $"+price+" x "+quantity+" = $"+(price*quantity));
-    });
-  }
+function buyAnother(){
+  inquirer.prompt([
+    {
+      type: "confirm",
+      name: "continue",
+      message: "Do you want to continue shopping?"
+    }, 
+  ]).then(function(user){
+    if(user.continue){
+       displayItems();
+    }
+    else{
+      connection.end();
+      process.exit();
+    }
+  });
+}
