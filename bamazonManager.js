@@ -8,7 +8,11 @@ var idArray = [];
 var output;
 var headerText = chalk.cyanBright;
 var bold = chalk.bold;
+var welcome = chalk.magentaBright;
 var warning = chalk.bgRed;
+var subheader = chalk.yellow;
+var error = chalk.redBright;
+var success = chalk.greenBright;
 var addInventory = false;
 var lowInventoryCount = 5;
 var departments = [];
@@ -23,11 +27,13 @@ var connection = mysql.createConnection({
 
   connection.connect(function(err) {
     if (err) throw err;
-    // console.log("connected as id " + connection.threadId + "\n");
-    console.log(bold("\nMANAGER'S VIEW\n"));
+    displayWelcomeMessage();
     showMenu();
   });
 
+  function displayWelcomeMessage(){
+    console.log(welcome("\n~+~+~+ Logged in as Manager: Bamazon +~+~+~\n"));
+  }
 
   function showMenu(){
     inquirer
@@ -72,7 +78,7 @@ var connection = mysql.createConnection({
     data = [];
     idArray = [];
     var query = connection.query("SELECT * FROM products ORDER BY product_name", function(err, res){
-        console.log(chalk.yellow("\nBamazon Inventory List"));
+        console.log(subheader("\nBamazon Inventory List"));
         var header = [headerText('Item ID'),headerText('NAME'),headerText('PRICE'), headerText('QUANTITY')];
         data.push(header);
         for (var i = 0; i < res.length; i++) {
@@ -85,7 +91,7 @@ var connection = mysql.createConnection({
             var item_id = res[i].item_id;
           }
           var price = res[i].price;
-          var item = [item_id,product_name,"$"+price,quantity];
+          var item = [item_id, product_name, "$"+price,quantity];
           data.push(item);
           idArray.push(res[i].item_id);
          }       
@@ -104,8 +110,8 @@ var connection = mysql.createConnection({
     data = [];
     var query = connection.query("SELECT * FROM products WHERE stock_quantity < ? ORDER BY product_name",[lowInventoryCount],
         function(err, res){
-        console.log(chalk.yellow("\nList of Low Inventories"));
-        if(res.length>0){
+        console.log(subheader("\nList of Low Inventories"));
+        if(res.length > 0){
             var header = [headerText('Item ID'),headerText('NAME'),headerText('PRICE'), headerText('QUANTITY')];
             data.push(header);
             for (var i = 0; i < res.length; i++) {
@@ -120,7 +126,7 @@ var connection = mysql.createConnection({
             console.log(output);
         }
         else{
-            console.log("Low inventory not found. All items have quantity greater than 5!\n");
+            console.log(success("Low inventory not found. All items have quantity greater than 5!\n"));
         }
         showMenu();
     });
@@ -133,7 +139,7 @@ var connection = mysql.createConnection({
 
 
   function selectItem(){
-    console.log(chalk.yellow("Add to above inventory\n"));
+    console.log(subheader("Add to above inventory\n"));
     inquirer
     .prompt({
           type: 'input',
@@ -141,18 +147,18 @@ var connection = mysql.createConnection({
           message: "Please enter item ID of the product you want to restock:",
           validate: function(input){
             if(!input.trim()){
-              return "Please enter an item ID:";
+              return error("Please enter an item ID:");
             }
-            else if(idArray.indexOf(input.trim()) > -1){
+            else if(idArray.indexOf(input.trim().toUpperCase()) > -1){
                 return true;
             }
             else{
-              return "Please enter a valid item Id:";
+              return error("Item ID doesn't match with any of our available products.\nPlease enter a valid item ID:");
             }
           }
-        })    
+        })
        .then(answers => {
-           var itemId = answers["itemId"].trim();
+           var itemId = answers["itemId"].trim().toUpperCase();
            selectQuantity(itemId);
       });
   }
@@ -165,13 +171,17 @@ var connection = mysql.createConnection({
           name: 'quantity',
           message: "Enter quantity you want to add:",
           validate: function(input){
-            if(Number.isInteger(parseInt(input))){
-              if(parseInt(input)<0){
-                return "Quantity cannot be zero. Please enter a valid quantity:"
+            var num = parseInt(input.trim());
+            if(typeof num ==="number"){
+              if(parseInt(input.trim())<=0){
+                return error("Quantity cannot be zero or less. Please enter a valid quantity:");
+              }
+              else if(!num){
+                return error("Please enter a quantity:");
               }
               return true;
             }
-            return "Please enter a number:";
+            return error("Please enter a number:");
           }
         })    
        .then(answers => {
@@ -186,7 +196,7 @@ var connection = mysql.createConnection({
             {
               type: "confirm",
               name: "restock",
-              message: "Are you sure you want to add "+quantity+" items of ID "+itemId+"?"
+              message: "Are you sure you want to add "+quantity+" items with ID "+itemId+" to inventory?"
             }, 
           ]).then(function(user){
               addInventory = false;
@@ -194,16 +204,16 @@ var connection = mysql.createConnection({
                 var query = connection.query("UPDATE products SET stock_quantity = stock_quantity + ? WHERE item_id = ?",
                 [quantity,itemId],function(err, res){
                    if(err){
-                    console.log("\nSorry item couldn't be updated.\n");
+                    console.log(error("\nSorry item couldn't be updated.\n"));
                    }
                    else{
-                    console.log("\n"+quantity+" items of item ID "+itemId+" added!\n");
+                    console.log(success("\n"+quantity+" items with item ID "+itemId+" added to inventory!\n"));
                    }
                    showMenu();
                 });
               }
               else{
-                  console.log("\nItem is not updated.\n");
+                  console.log(success("\nItem is not updated.\n"));
                   showMenu();
               }
           });    
@@ -235,7 +245,7 @@ var connection = mysql.createConnection({
                     return true;
                 }
                 else{
-                    return "Please enter product's name:";
+                    return error("Please enter product's name:");
                 }
               }
          },
@@ -250,25 +260,39 @@ var connection = mysql.createConnection({
             name:"price",
             message: "Enter price of the item:",
             validate: function(input){
-                var num = parseFloat(input.trim());
-                if(typeof num==="number" && num){
-                    return true;
+              if(input.trim()){
+                var num = parseInt(input.trim());
+                if(isNaN(num)){
+                  return error("Please enter price in number:");
                 }
-                return "Please enter the price in number:";
-              }   
+                //NaN is also a number
+                else if(typeof num ==="number"){
+                  return true;
+                }
+              }       
+              //if blank
+              return error("Please enter price:");
+            }
         },
         {
             type: "input",
             name:"stockQuantity",
             message: "Enter stock quantity:",
             validate: function(input){
-              var num = parseInt(input.trim());
-              if(typeof num==="number" && num){
+              if(input.trim()){
+                var num = parseInt(input.trim());
+                if(isNaN(num)){
+                  return error("Please enter quantity in number:");
+                }
+                //NaN is also a number
+                else if(typeof num ==="number"){
                   return true;
-              }
-              return "Please enter the quantity in number:";
-              } 
-        }
+                }
+              }       
+              //if blank
+              return error("Please enter quantity:");
+            }
+          }
       ]).then(function(inputs){
          promptAddition(inputs); 
        });        
@@ -294,7 +318,7 @@ var connection = mysql.createConnection({
          proceedAddition(inputs);
       }
       else{
-         console.log("\nAddition canceled.\n");
+         console.log(success("\nAddition canceled.\n"));
          showMenu();
       }
     });
@@ -316,13 +340,13 @@ var connection = mysql.createConnection({
     function(err, res){
       if(err){
             if(err.code === "ER_DUP_ENTRY"){
-              console.log("\nSorry. Product could not be added.\nItem id already exists. Try adding to inventory instead.\n");
+              console.log(error("\nSorry. Product could not be added.\nItem ID already exists. Try adding to inventory instead.\n"));
             }
             else if(err.code === "ER_DATA_TOO_LONG"){
-               console.log("\nSorry. Product could not be added.\nItem ID should be less than 8 characters long.\n")
+               console.log(error("\nSorry. Product could not be added.\nItem ID should be less than 8 characters long.\n"));
             }
             else{
-              console.log("\nSorry. Product could not be added.\n");
+              console.log(error("\nSorry. Product could not be added.\n"));
             }
       }
       else{
