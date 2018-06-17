@@ -71,7 +71,7 @@ var connection = mysql.createConnection({
     data = [];
     idArray = [];
     var query = connection.query("SELECT * FROM products ORDER BY product_name", function(err, res){
-        console.log(chalk.yellow("\nBamazon Inventory List\n"));
+        console.log(chalk.yellow("\nBamazon Inventory List"));
         var header = [headerText('Item ID'),headerText('NAME'),headerText('PRICE'), headerText('QUANTITY')];
         data.push(header);
         for (var i = 0; i < res.length; i++) {
@@ -103,7 +103,7 @@ var connection = mysql.createConnection({
     data = [];
     var query = connection.query("SELECT * FROM products WHERE stock_quantity < ? ORDER BY product_name",[lowInventoryCount],
         function(err, res){
-        console.log(chalk.yellow("\nList of Low Inventories\n"));
+        console.log(chalk.yellow("\nList of Low Inventories"));
         if(res.length>0){
             var header = [headerText('Item ID'),headerText('NAME'),headerText('PRICE'), headerText('QUANTITY')];
             data.push(header);
