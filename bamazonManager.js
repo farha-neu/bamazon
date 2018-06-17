@@ -186,7 +186,7 @@ var connection = mysql.createConnection({
             {
               type: "confirm",
               name: "restock",
-              message: "Do you want to add "+quantity+" items of ID "+itemId+"?"
+              message: "Are you sure you want to add "+quantity+" items of ID "+itemId+"?"
             }, 
           ]).then(function(user){
               addInventory = false;
@@ -294,7 +294,7 @@ var connection = mysql.createConnection({
          proceedAddition(inputs);
       }
       else{
-         console.log("\nAddition cancelled.\n");
+         console.log("\nAddition canceled.\n");
          showMenu();
       }
     });
@@ -302,12 +302,17 @@ var connection = mysql.createConnection({
 
 
   function proceedAddition(inputs){
+    var itemId = inputs.itemId.trim();
+    var productName = inputs.productName.trim();
+    var departmentName = inputs.departmentName;
+    var priceItem = inputs.price.trim();
+    var stockQuantity = inputs.stockQuantity.trim();
     var query = connection.query("INSERT INTO products SET ?",
-    {item_id: inputs.itemId.trim(),
-    product_name: inputs.productName.trim(),
-    department_name: inputs.departmentName.trim(),
-    price: inputs.price.trim(),
-    stock_quantity: inputs.stockQuantity.trim()},
+    {item_id: itemId,
+    product_name: productName,
+    department_name: departmentName,
+    price: priceItem,
+    stock_quantity: stockQuantity},
     function(err, res){
       if(err){
             if(err.code === "ER_DUP_ENTRY"){
@@ -325,7 +330,7 @@ var connection = mysql.createConnection({
         console.log("\nFollowing new product is added:");
         var header = [headerText('Item ID'),headerText('NAME'),headerText('DEPARTMENT'),headerText('PRICE'), headerText('QUANTITY')];
         dataItem.push(header);
-        dataItem.push([inputs.itemId, inputs.productName, inputs.departmentName, "$"+inputs.price, inputs.stockQuantity]);
+        dataItem.push([itemId, productName, departmentName, "$"+priceItem, stockQuantity]);
         var outputTable = table(dataItem);
         console.log(outputTable);
       }
