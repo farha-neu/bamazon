@@ -308,11 +308,9 @@ var connection = mysql.createConnection({
     price: inputs.price,
     stock_quantity: inputs.stockQuantity},
     function(err, res){
-      //  console.log(res.affectedRows+" added");
       if(err){
             if(err.code === "ER_DUP_ENTRY"){
               console.log("\nSorry. Product could not be added.\nItem id already exists. Try adding to inventory instead.\n");
-              // showMenu();
             }
             else if(err.code === "ER_DATA_TOO_LONG"){
                console.log("\nSorry. Product could not be added.\nItem ID should be less than 8 characters long.\n")
