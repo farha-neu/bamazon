@@ -5,6 +5,7 @@ var chalk = require("chalk");
 
 var data = [];
 var idArray = [];
+var zeroStock = 0;
 var data, output;
 headerText = chalk.cyanBright;
 
@@ -24,7 +25,8 @@ var connection = mysql.createConnection({
 
   function displayItems(){
     data = [];
-    var query = connection.query("SELECT * FROM products WHERE stock_quantity > 0 ORDER BY product_name", function(err, res){
+    idArray = [];
+    var query = connection.query("SELECT * FROM products WHERE stock_quantity > ? ORDER BY product_name", [zeroStock],function(err, res){
         console.log(chalk.yellow("\nList of Bamazon Products for Sale"));
         var header = [headerText('Item ID'),headerText('NAME'),headerText('PRICE')];
         data.push(header);
@@ -34,12 +36,10 @@ var connection = mysql.createConnection({
           var price = res[i].price;
           var item = [item_id,product_name,"$"+price];
           data.push(item);
+          idArray.push(item_id);
          }       
          output = table(data);
          console.log(output);
-         for(var i = 1; i < data.length; i++){
-           idArray.push(data[i][0]);
-         }
          selectItem();
     });
   }
@@ -49,7 +49,7 @@ var connection = mysql.createConnection({
     .prompt({
           type: 'input',
           name: 'itemId',
-          message: "Please enter 8 digit item ID of the product you want to buy:",
+          message: "Please enter item ID of the product you want to buy:",
           validate: function(input){
             if(!input.trim()){
               return "Please enter an item ID:";
@@ -77,8 +77,8 @@ var connection = mysql.createConnection({
           name: 'quantity',
           message: "Enter quantity:",
           validate: function(input){
-            if(Number.isInteger(parseInt(input))){
-              if(parseInt(input)<0){
+            if(Number.isInteger(parseInt(input.trim()))){
+              if(parseInt(input.trim())<0){
                 return "Quantity cannot be zero. Please enter a valid quantity:"
               }
               return true;
@@ -106,29 +106,32 @@ var connection = mysql.createConnection({
           var stockQuantity = res[0].stock_quantity;
           var price = res[0].price;
               if(quantity <= stockQuantity){
-                var updatedQuantity = stockQuantity - quantity; 
-                var query = connection.query("UPDATE products SET ? WHERE ?", 
-                [
-                {stock_quantity: updatedQuantity},
-                {item_id: itemId}
-                ], 
+                var query = connection.query("UPDATE products SET stock_quantity = stock_quantity - ?, product_sales = product_sales + ?"
+                +" WHERE item_id = ?", 
+                [quantity,price*quantity,itemId], 
                 function(err, res){
-                  console.log("\nYour order is placed!");
-                  console.log("Here's your Invoice:");
-                  console.log(itemName+"("+quantity+")");
-                  console.log("Totol cost: $"+price+" x "+quantity+" = $"+(price*quantity));
-                  console.log("Thank you for shopping with Bamazon!");
+                  if(err){
+                    console.log("\nSorry. Order could not be processed.\n");
+                  }
+                  else{
+                    console.log("\nYour order is placed!");
+                    console.log("Here's your Invoice:");
+                    console.log(itemName+"("+quantity+")");
+                    console.log("Totol cost: $"+price+" x "+quantity+" = $"+(price*quantity));
+                    console.log("Thank you for shopping with Bamazon!\n");
+                  } 
                   buyAnother();
             });
           }
           else{
-              console.log("Insufficient Quantity!");
+              console.log("Sorry. We currently do not have sufficient quantity in our stock.");
+              console.log("Your order cannot be placed.\n");
               buyAnother();
           }        
       });
     }
     else{
-      console.log("Your order is not placed");
+      console.log("Your order is not placed.\n");
       buyAnother();
     }
   });
@@ -139,7 +142,7 @@ function buyAnother(){
     {
       type: "confirm",
       name: "continue",
-      message: "Do you want to continue shopping?"
+      message: "Do you want to buy another item?"
     }, 
   ]).then(function(user){
     if(user.continue){
@@ -147,6 +150,7 @@ function buyAnother(){
     }
     else{
       connection.end();
+      console.log("See you soon.");
       process.exit();
     }
   });
