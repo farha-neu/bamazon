@@ -38,13 +38,14 @@ var connection = mysql.createConnection({
     idArray = [];
     var query = connection.query("SELECT * FROM products WHERE stock_quantity > ? ORDER BY product_name", [zeroStock],function(err, res){
         console.log(subheader("Here's a list of products to shop"));
-        var header = [headerText('Item ID'),headerText('NAME'),headerText('PRICE')];
+        var header = [headerText('Item ID'),headerText('NAME'),headerText('UNIT PRICE'), headerText('QUANTITY')];
         data.push(header);
         for (var i = 0; i < res.length; i++) {
           var item_id = res[i].item_id;
           var product_name = res[i].product_name;
           var price = res[i].price;
-          var item = [item_id,product_name,"$"+price];
+          var stockQuantity = res[i].stock_quantity;
+          var item = [item_id,product_name,"$"+price,stockQuantity];
           data.push(item);
           idArray.push(item_id);
          }       
