@@ -5,7 +5,7 @@ var chalk = require("chalk");
 
 var data = [];
 var idArray = [];
-var data, output;
+var output;
 var headerText = chalk.cyanBright;
 var bold = chalk.bold;
 var warning = chalk.bgRed;
@@ -59,6 +59,7 @@ var connection = mysql.createConnection({
               addNewProduct();
               break;
             case "Exit":
+              connection.end();
               console.log("Logged out.");
               process.exit(0);
               break;
@@ -151,7 +152,7 @@ var connection = mysql.createConnection({
           }
         })    
        .then(answers => {
-           var itemId = answers["itemId"];
+           var itemId = answers["itemId"].trim();
            selectQuantity(itemId);
       });
   }
@@ -174,7 +175,7 @@ var connection = mysql.createConnection({
           }
         })    
        .then(answers => {
-           var quantity = answers["quantity"];
+           var quantity = answers["quantity"].trim();
            addItem(itemId, quantity);
       });
   }
@@ -302,11 +303,11 @@ var connection = mysql.createConnection({
 
   function proceedAddition(inputs){
     var query = connection.query("INSERT INTO products SET ?",
-    {item_id: inputs.itemId,
-    product_name: inputs.productName,
-    department_name: inputs.departmentName,
-    price: inputs.price,
-    stock_quantity: inputs.stockQuantity},
+    {item_id: inputs.itemId.trim(),
+    product_name: inputs.productName.trim(),
+    department_name: inputs.departmentName.trim(),
+    price: inputs.price.trim(),
+    stock_quantity: inputs.stockQuantity.trim()},
     function(err, res){
       if(err){
             if(err.code === "ER_DUP_ENTRY"){

@@ -6,8 +6,8 @@ var chalk = require("chalk");
 var data = [];
 var idArray = [];
 var zeroStock = 0;
-var data, output;
-headerText = chalk.cyanBright;
+var output;
+var headerText = chalk.cyanBright;
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -64,7 +64,7 @@ var connection = mysql.createConnection({
         })    
        .then(answers => {
            console.log(answers["itemId"]);
-           var itemId = answers["itemId"];
+           var itemId = answers["itemId"].trim();
            selectQuantity(itemId);
       });
   }
@@ -87,7 +87,7 @@ var connection = mysql.createConnection({
           }
         })    
        .then(answers => {
-           var quantity = answers["quantity"];
+           var quantity = answers["quantity"].trim();
            buyItem(itemId, quantity);
       });
   }
