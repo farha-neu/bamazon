@@ -11,16 +11,16 @@ VALUES ("Beauty & Personal Care",30000),
 ("Home & Kitchen",30000);
 
 INSERT INTO products (item_id, product_name, department_name, price, stock_quantity)
-VALUES ("BP944RUR","BBs Lip Balm","Beauty & Personal Care",4.99,3),
-("KB636HHK","Play-Doh","Toys, Kids & Baby",7.99,300),
-("EC964BXR","DELL XPS-12 Notebook","Electronics & Computers",1200,90),
-("HM744TUT","Circle Crossbody Purse","Handmade",205,5),
-("BA235ETY","Harry Potter(Set 1-7)","Books & Audible",4.99,10),
-("PS565URE","Dry Dog Food","Pet Supplies",44.50,500),
-("SO944WER","Beach Cruiser Bicycle","Sports & Outdoors",163.55,2),
-("CS356HYE","Diamond Necklace","Clothing, Shoes & Jewellery",550,100),
-("AI567UUY","Front Track Bar","Automotive & Industrial",250,200),
-("HK054ETR","Crock Slow Cooker","Home & Kitchen",35,50);
+VALUES ("BP1","BBs Lip Balm","Beauty & Personal Care",4.99,3),
+("TK1","Play-Doh","Toys, Kids & Baby",7.99,300),
+("EC1","DELL XPS-12 Notebook","Electronics & Computers",1200,90),
+("HM1","Circle Crossbody Purse","Handmade",205,5),
+("BA1","Harry Potter(Set 1-7)","Books & Audible",4.99,10),
+("PS1","Dry Dog Food","Pet Supplies",44.50,500),
+("SP1","Beach Cruiser Bicycle","Sports & Outdoors",163.55,2),
+("CS1","Diamond Necklace","Clothing, Shoes & Jewellery",550,100),
+("AI1","Front Track Bar","Automotive & Industrial",250,200),
+("EC2","DELL XPS-12 Notebook","Electronics & Computers",1150,50);
 
 SELECT * FROM departments;
 

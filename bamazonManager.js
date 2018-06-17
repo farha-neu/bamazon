@@ -302,7 +302,7 @@ var connection = mysql.createConnection({
 
 
   function proceedAddition(inputs){
-    var itemId = inputs.itemId.trim();
+    var itemId = inputs.itemId.trim().toUpperCase();
     var productName = inputs.productName.trim();
     var departmentName = inputs.departmentName;
     var priceItem = inputs.price.trim();
