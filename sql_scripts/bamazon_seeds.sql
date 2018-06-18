@@ -25,4 +25,3 @@ VALUES ("BP1","BBs Lip Balm","Beauty & Personal Care",4.99,3),
 SELECT * FROM departments;
 
 SELECT * FROM products;
-

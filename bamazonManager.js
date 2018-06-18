@@ -7,7 +7,6 @@ var data = [];
 var idArray = [];
 var output;
 var headerText = chalk.cyanBright;
-var bold = chalk.bold;
 var welcome = chalk.magentaBright;
 var warning = chalk.bgRed;
 var subheader = chalk.yellow;
@@ -79,7 +78,7 @@ var connection = mysql.createConnection({
     idArray = [];
     var query = connection.query("SELECT * FROM products ORDER BY product_name", function(err, res){
         console.log(subheader("\nBamazon Inventory List"));
-        var header = [headerText('Item ID'),headerText('NAME'),headerText('PRICE'), headerText('QUANTITY')];
+        var header = [headerText('Item ID'),headerText('NAME'),headerText('UNIT PRICE'), headerText('QUANTITY')];
         data.push(header);
         for (var i = 0; i < res.length; i++) {
           var product_name = res[i].product_name;

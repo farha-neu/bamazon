@@ -125,7 +125,7 @@ var connection = mysql.createConnection({
           console.log("\nYour shopping cart:");
           cart = [];
           var header = [headerText('Item ID'),headerText('NAME'),headerText('QUANTITY'),headerText('UNIT PRICE'),headerText('TOTAL PRICE')];
-          var cartItem = [itemId, itemName, quantity,"$"+price,"$"+price*quantity];
+          var cartItem = [itemId, itemName, quantity,"$"+price,"$"+(price*quantity).toFixed(2)];
           cart.push(header);
           cart.push(cartItem);
           console.log(table(cart));

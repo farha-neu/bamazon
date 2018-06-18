@@ -6,8 +6,10 @@ var chalk = require("chalk");
 var data = [];
 var output;
 var headerText = chalk.cyanBright;
-var bold = chalk.bold;
-var warning = chalk.red;
+var welcome = chalk.magentaBright;
+var subheader = chalk.yellow;
+var error = chalk.redBright;
+var success = chalk.greenBright;
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -19,10 +21,13 @@ var connection = mysql.createConnection({
 
   connection.connect(function(err) {
     if (err) throw err;
-    console.log(bold("\nSUPERVISOR'S VIEW\n"));
+    displayWelcomeMessage();
     showMenu();
   });
-
+  
+  function displayWelcomeMessage(){
+    console.log(welcome("\n~+~+~+ Logged in as Supervisor: Bamazon +~+~+~\n"));
+  }
 
   function showMenu(){
     inquirer
@@ -56,17 +61,17 @@ var connection = mysql.createConnection({
 
   function displayProductSales(){
     data = [];
-    var query = connection.query("SELECT department_id, departments.department_name, over_head_costs, SUM(product_sales) AS product_sales,"+
-    "(IFNULL(product_sales, 0) - over_head_costs) AS total_profit FROM products RIGHT JOIN departments ON "+
+    var query = connection.query("SELECT department_id, departments.department_name, over_head_costs, IFNULL(SUM(product_sales),0) AS product_sales,"+
+    "(IFNULL(SUM(product_sales), 0) - over_head_costs) AS total_profit FROM products RIGHT JOIN departments ON "+
     "products.department_name = departments.department_name "+
     "group by departments.department_name "+
     "order by department_id;", 
     function(err, res){
         if(err){
-             console.log("Sorry, request couldn't be processed");
+             console.log("Sorry, your request couldn't be processed");
         }
         else{
-            console.log(chalk.yellow("\nProduct Sales By Department"));
+            console.log(subheader("\nProduct Sales By Department"));
             var header = [headerText('DEPARTMENT ID'),headerText('DEPARTMENT NAME'),headerText('OVERHEAD COSTS'), headerText('PRODUCT SALES'),
             headerText('TOTAL PROFIT')];
             data.push(header);
@@ -74,12 +79,7 @@ var connection = mysql.createConnection({
                 var departmentId = res[i].department_id;
                 var departmentName = res[i].department_name;
                 var overheadCost= res[i].over_head_costs;
-                if(res[i].product_sales===null){
-                    var productSales= 0;
-                }
-                else{
-                    var productSales= res[i].product_sales;
-                }
+                var productSales= res[i].product_sales;
                 var profit = res[i].total_profit;
                 var item = [departmentId,departmentName,"$"+overheadCost,"$"+productSales,"$"+profit];
                 data.push(item);
@@ -93,7 +93,7 @@ var connection = mysql.createConnection({
   }
 
   function createNewDepartments(){
-    console.log(chalk.yellow("\nCreate new department\n"));
+    console.log(subheader("\nCreate new department\n"));
     inquirer.prompt([
     {
         type: "input",
@@ -103,7 +103,7 @@ var connection = mysql.createConnection({
             if(input)
               return true;
             else
-              return "Please enter a department's name:"
+              return error("Please enter a department's name:");
         }
     },
     {
@@ -115,7 +115,7 @@ var connection = mysql.createConnection({
             if(typeof num==="number" && num){
                 return true;
             }
-            return "Please enter the overhead cost in number:";
+            return error("Please enter the overhead cost in number:");
           }   
     } 
    ]).then(function(inputs){
@@ -135,7 +135,7 @@ var connection = mysql.createConnection({
          proceedAddition(inputs);
       }
       else{
-         console.log(warning("\nDepartment creation canceled.\n"));
+         console.log(success("\nDepartment creation canceled.\n"));
          showMenu();
       }
     });
@@ -149,14 +149,14 @@ var connection = mysql.createConnection({
       {department_name : departmentName, over_head_costs : overheadCost}, function(err, res){
         if(err){
             if(err.code === "ER_DUP_ENTRY"){
-              console.log(warning("\nDepartment already exists. Try creating a new one.\n"));
+              console.log(error("\nDepartment already exists. Try creating a new one.\n"));
             }
             else{
-              console.log(warning("\nSorry. Department could not be created.\n"));
+              console.log(error("\nSorry. Department could not be created.\n"));
             }
        }
        else{
-        console.log("\n"+departmentName+" department with overheadcost of $"+overheadCost+" added!\n");
+        console.log(success("\n"+departmentName+" department with overheadcost of $"+overheadCost+" is added!\n"));
       }
       showMenu();
 
