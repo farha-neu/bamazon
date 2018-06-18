@@ -70,7 +70,7 @@ var departments = [];
     idArray = [];
     var query = connection.query("SELECT * FROM products ORDER BY product_name", function(err, res){
         console.log(subheader("\nBamazon Inventory List"));
-        var header = [headerText('Item ID'),headerText('NAME'),headerText('UNIT PRICE'), headerText('QUANTITY')];
+        var header = [headerText('Item ID'),headerText('NAME'),headerText('DEPARTMENT'),headerText('UNIT PRICE'), headerText('QUANTITY')];
         data.push(header);
         for (var i = 0; i < res.length; i++) {
           var product_name = res[i].product_name;
@@ -82,7 +82,8 @@ var departments = [];
             var item_id = res[i].item_id;
           }
           var price = res[i].price;
-          var item = [item_id, product_name, "$"+price,quantity];
+          var department = res[i].department_name;
+          var item = [item_id, product_name,department,"$"+price,quantity];
           data.push(item);
           idArray.push(res[i].item_id);
          }       
@@ -103,14 +104,15 @@ var departments = [];
         function(err, res){
         console.log(subheader("\nList of Low Inventories"));
         if(res.length > 0){
-            var header = [headerText('Item ID'),headerText('NAME'),headerText('PRICE'), headerText('QUANTITY')];
+            var header = [headerText('Item ID'),headerText('NAME'),headerText('DEPARTMENT'),headerText('PRICE'), headerText('QUANTITY')];
             data.push(header);
             for (var i = 0; i < res.length; i++) {
                 var item_id = res[i].item_id;
                 var product_name = res[i].product_name;
                 var price = res[i].price;
                 var quantity = res[i].stock_quantity;
-                var item = [item_id,product_name,"$"+price,quantity];
+                var department = res[i].department_name;
+                var item = [item_id,product_name,department,"$"+price,quantity];
                 data.push(item);
             }       
             output = table(data);

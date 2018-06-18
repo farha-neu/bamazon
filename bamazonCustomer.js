@@ -31,14 +31,14 @@ var success = chalk.greenBright;
     idArray = [];
     var query = connection.query("SELECT * FROM products WHERE stock_quantity > ? ORDER BY product_name", [zeroStock],function(err, res){
         console.log(subheader("Here's a list of products to shop"));
-        var header = [headerText('Item ID'),headerText('NAME'),headerText('UNIT PRICE'), headerText('QUANTITY')];
+        var header = [headerText('Item ID'),headerText('NAME'),headerText('DEPARTMENT'),headerText('UNIT PRICE')];
         data.push(header);
         for (var i = 0; i < res.length; i++) {
           var item_id = res[i].item_id;
           var product_name = res[i].product_name;
           var price = res[i].price;
-          var stockQuantity = res[i].stock_quantity;
-          var item = [item_id,product_name,"$"+price,stockQuantity];
+          var department = res[i].department_name;
+          var item = [item_id,product_name,department,"$"+price];
           data.push(item);
           idArray.push(item_id);
          }       

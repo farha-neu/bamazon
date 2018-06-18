@@ -30,7 +30,7 @@ Below are the detailed steps for testing the application for each of these user.
 
 3. Test Cases:
    * Steps to Buy a Product:
-     * After completing step 2, you will see a list of products available for sale including item ID, item name, unit price, and quantity. 
+     * After completing step 2, you will see a list of products available for sale including item ID, item name, department, unit price, and quantity. 
      * Enter the item ID of the product you want to buy and press enter.
         * Validation : Failure to provide correct item ID will show an error message asking for valid item ID.
      * Enter the quantity of product and hit enter.
@@ -60,7 +60,7 @@ Below are the detailed steps for testing the application for each of these user.
 3. Test Cases:
    * Steps to View Products for Sale:
      * Select `View Products for Sale` option with the help of arrow keys, and hit enter.
-     * The app will list every available item: the item IDs, names, prices, and quantities. Items IDs with quantities less than five will be marked in red.
+     * The app will list every available item: the item IDs, names, department, prices, and quantities. Items IDs with quantities less than five will be marked in red.
    * Steps to View Low Inventory:
      * Select `View Low Inventory` option with the help of arrow keys, and hit enter.
      * The app will list all items with an inventory count lower than five.
