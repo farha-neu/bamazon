@@ -1,5 +1,5 @@
-var mysql = require("mysql");
 var inquirer = require("inquirer");
+var connection = require("./connection.js");
 const {table} = require('table');
 var chalk = require("chalk");
 
@@ -10,14 +10,6 @@ var welcome = chalk.magentaBright;
 var subheader = chalk.yellow;
 var error = chalk.redBright;
 var success = chalk.greenBright;
-
-var connection = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-    user: "root",
-    password: "",
-    database: "bamazon"
-  });
 
   connection.connect(function(err) {
     if (err) throw err;
