@@ -21,7 +21,7 @@ There are three(3) kinds of users of the system:
 * Manager
 * Supervisor  
 
-Below are the detailed steps for testing the application for each of these users.  
+Below are the detailed steps for testing the application for each of these user.  
 ### <h3>CUSTOMER</h3>
 1. Open terminal and navigate to inside the project folder on terminal, where you would see a `bamazonCustomer.js` file.
 2. Type `node bamazonCustomer.js` on your terminal and hit enter. 
