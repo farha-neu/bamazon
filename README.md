@@ -26,7 +26,7 @@ Below are the detailed steps for testing the application for each of these user.
 1. Open terminal and navigate to inside the project folder on terminal, where you would see a `bamazonCustomer.js` file.
 2. Type `node bamazonCustomer.js` on your terminal and hit enter. 
 
-![Customer Demo](https://user-images.githubusercontent.com/30298841/41516495-06e7fad2-726a-11e8-80d3-3e26ed825569.gif)
+![Customer Demo](https://user-images.githubusercontent.com/30298841/41565782-04b67542-730d-11e8-8d78-a64135396613.gif)
 
 3. Test Cases:
    * Steps to Buy a Product:
