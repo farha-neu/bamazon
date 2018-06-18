@@ -42,10 +42,6 @@ Below are the detailed steps for testing the application for each of these user.
      * Else, type `N` if you want to cancel the order and exit the application.
 
 
-
-
-
-
 ### <h3>MANAGER</h3>
 1. Open terminal and navigate to inside the project folder on terminal, where you would see a `bamazonManager.js` file.
 2. Type `node bamazonManager.js` on your terminal and hit enter. You will see a set of menu options:
@@ -79,7 +75,6 @@ Below are the detailed steps for testing the application for each of these user.
        * If item ID already exists in the database, the request will not be processed. Else, new product will be created after typing `Y` when asked for confirmation.
 
 
-
 ### <h3>SUPERVISOR</h3>
 1. Open terminal and navigate to inside the project folder on terminal, where you would see a `bamazonSupervisor.js` file.
 2. Type `node bamazonSupervisor.js` on your terminal and hit enter. 
@@ -88,7 +83,7 @@ Below are the detailed steps for testing the application for each of these user.
    * Create New Department
    * Exit
 
-![Supervisor Demo](https://user-images.githubusercontent.com/30298841/41522085-7da55024-7289-11e8-9d8e-c56fe7c9a72c.gif)
+![Supervisor Demo](https://user-images.githubusercontent.com/30298841/41567758-c354e8ae-7316-11e8-8c14-d9ff2398c820.gif)
 
 3. Test Cases:
    * Steps to View Product Sales by Department:
@@ -99,6 +94,7 @@ Below are the detailed steps for testing the application for each of these user.
      * Enter department name, and overhead cost of the department when asked and hit enter.
      * Next, you will need to confirm creation of new department by typing `Y` when confirmation propmt is shown.
        * Validation: If department name matches with any of the existing deparment's name in the the database, the request will not be processed,    and a message will be logged: `"Department already exists. Try creating a new one."`
+
 
 ## Built With
    * node.js
