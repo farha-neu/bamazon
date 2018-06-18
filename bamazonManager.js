@@ -257,12 +257,12 @@ var connection = mysql.createConnection({
         {
             type: "input",
             name:"price",
-            message: "Enter price of the item:",
+            message: "Enter price (in US dollar) of the item:",
             validate: function(input){
               if(input.trim()){
                 var num = parseInt(input.trim());
                 if(isNaN(num)){
-                  return error("Please enter price in number:");
+                  return error("Please enter price (in US dollar) in number:");
                 }
                 //NaN is also a number
                 else if(typeof num ==="number"){
@@ -270,7 +270,7 @@ var connection = mysql.createConnection({
                 }
               }       
               //if blank
-              return error("Please enter price:");
+              return error("Please enter price (in US dollar):");
             }
         },
         {
