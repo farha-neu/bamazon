@@ -27,8 +27,17 @@ Below are the detailed steps for testing the application for each of these users
 2. Type `node bamazonCustomer.js` on your terminal and hit enter. 
 ![Customer Demo](https://user-images.githubusercontent.com/30298841/41516495-06e7fad2-726a-11e8-80d3-3e26ed825569.gif)  
 3. Test Cases:
-   * Steps to buy a product:
-
+   * Steps to Buy a Product:
+     * After completing step 2, you will see a list of products available for sale including item ID, item name, unit price, and quantity .
+     * Enter the item ID of the product you want to buy and press enter.
+        * Validation : Failure to provide correct item ID will show an error message asking for valid item ID.
+     * Enter the quantity of product and hit enter.
+        * Validation : 
+           * Quantity field cannot be left blank, must be a number, and greater than 0.
+           * If the entered quantity is greater than the available stock, the app will log a message and prevent the order from going through.
+     * You will see a shopping cart listing the product you want to buy for review.
+     * Next if you type `Y`, your order will be confirmed and you will see an invoice.
+     * Else, type `N` if you want to cancel the order and exit the application.
 
 
 
@@ -37,16 +46,20 @@ Below are the detailed steps for testing the application for each of these users
 
 ### <h3>MANAGER</h3>
 1. Open terminal and navigate to inside the project folder on terminal, where you would see a `bamazonCustomer.js` file.
-2. Type `node bamazonCustomer.js` on your terminal and hit enter. 
+2. Type `node bamazonManager.js` on your terminal and hit enter. 
 ![Manager Demo](https://user-images.githubusercontent.com/30298841/41520847-81681336-7284-11e8-8e45-1c32f3ae26fe.gif)
 3. Test Cases:
-   * Steps to buy a product:
+   * Steps to View Products for Sale:
+   * Steps to View Low Inventory:
+   * Steps to Add to Inventory:
+   * Steps to Add New Product:
 
 
 
 ### <h3>SUPERVISOR</h3>
 1. Open terminal and navigate to inside the project folder on terminal, where you would see a `bamazonCustomer.js` file.
-2. Type `node bamazonCustomer.js` on your terminal and hit enter. 
+2. Type `node bamazonSupervisor.js` on your terminal and hit enter. 
 ![Supervisor Demo](https://user-images.githubusercontent.com/30298841/41522085-7da55024-7289-11e8-9d8e-c56fe7c9a72c.gif)
 3. Test Cases:
-   * Steps to buy a product:
+   * Steps to View Product Sales by Department:
+   * Steps to Create New Department:
