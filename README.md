@@ -55,7 +55,7 @@ Below are the detailed steps for testing the application for each of these user.
     * Add New Product
     * Exit
 
-![Manager Demo](https://user-images.githubusercontent.com/30298841/41520847-81681336-7284-11e8-8e45-1c32f3ae26fe.gif)
+![Manager Demo](https://user-images.githubusercontent.com/30298841/41566230-803f3026-730f-11e8-8068-6f3f86939112.gif)
 
 3. Test Cases:
    * Steps to View Products for Sale:
