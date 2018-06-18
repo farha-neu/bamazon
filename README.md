@@ -10,7 +10,7 @@ Bamazon is like an Amazon-like storefront built using MySQL and node.js. This Co
 1. Clone this git repository using the steps mentioned on the link below: https://help.github.com/articles/cloning-a-repository/.
 2. Open another terminal and navigate to inside the project folder on terminal, where you would see a package.json file. 
 3. Type `npm install` for installing all the project dependencies and hit enter. 
-4. Run the `bamazon_schema.sql` and `bamazon_seeds.sql` which are located in sql_scripts folder on your MySQL Workbench. 
+4. Run the `bamazon_schema.sql` and `bamazon_seeds.sql`(located in sql_scripts folder) on your MySQL Workbench. 
 5. Go to `connection.js` file and make sure to add your MySQL password in blank password field if you had set any during installation.
 
 And you are all set to use Bamazon!
