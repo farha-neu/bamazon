@@ -87,7 +87,9 @@ Below are the detailed steps for testing the application for each of these user.
    * View Product Sales by Department
    * Create New Department
    * Exit
+
 ![Supervisor Demo](https://user-images.githubusercontent.com/30298841/41522085-7da55024-7289-11e8-9d8e-c56fe7c9a72c.gif)
+
 3. Test Cases:
    * Steps to View Product Sales by Department:
      * Select `View Product Sales by Department` option with the help of arrow keys, and hit enter.
