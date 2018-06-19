@@ -29,7 +29,7 @@ var success = chalk.greenBright;
   function displayItems(){
     data = [];
     idArray = [];
-    var query = connection.query("SELECT * FROM products WHERE stock_quantity > ? ORDER BY product_name", [zeroStock],function(err, res){
+    var query = connection.query("SELECT * FROM products WHERE stock_quantity > ? ORDER BY department_name", [zeroStock],function(err, res){
         console.log(subheader("Here's a list of products to shop"));
         var header = [headerText('Item ID'),headerText('NAME'),headerText('DEPARTMENT'),headerText('UNIT PRICE')];
         data.push(header);

@@ -68,7 +68,7 @@ var departments = [];
   function displayItems(){
     data = [];
     idArray = [];
-    var query = connection.query("SELECT * FROM products ORDER BY product_name", function(err, res){
+    var query = connection.query("SELECT * FROM products ORDER BY item_id", function(err, res){
         console.log(subheader("\nBamazon Inventory List"));
         var header = [headerText('Item ID'),headerText('NAME'),headerText('DEPARTMENT'),headerText('UNIT PRICE'), headerText('QUANTITY')];
         data.push(header);
@@ -100,7 +100,7 @@ var departments = [];
 
   function displayLowInventory(){
     data = [];
-    var query = connection.query("SELECT * FROM products WHERE stock_quantity < ? ORDER BY product_name",[lowInventoryCount],
+    var query = connection.query("SELECT * FROM products WHERE stock_quantity < ? ORDER BY item_id",[lowInventoryCount],
         function(err, res){
         console.log(subheader("\nList of Low Inventories"));
         if(res.length > 0){
