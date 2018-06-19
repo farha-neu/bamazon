@@ -104,7 +104,7 @@ var departments = [];
         function(err, res){
         console.log(subheader("\nList of Low Inventories"));
         if(res.length > 0){
-            var header = [headerText('Item ID'),headerText('NAME'),headerText('DEPARTMENT'),headerText('PRICE'), headerText('QUANTITY')];
+            var header = [headerText('Item ID'),headerText('NAME'),headerText('DEPARTMENT'),headerText('UNIT PRICE'), headerText('QUANTITY')];
             data.push(header);
             for (var i = 0; i < res.length; i++) {
                 var item_id = res[i].item_id;
@@ -345,7 +345,7 @@ var departments = [];
       else{
         var dataItem = [];
         console.log("\nFollowing new product is added:");
-        var header = [headerText('Item ID'),headerText('NAME'),headerText('DEPARTMENT'),headerText('PRICE'), headerText('QUANTITY')];
+        var header = [headerText('Item ID'),headerText('NAME'),headerText('DEPARTMENT'),headerText('UNIT PRICE'), headerText('QUANTITY')];
         dataItem.push(header);
         dataItem.push([itemId, productName, departmentName, "$"+priceItem, stockQuantity]);
         var outputTable = table(dataItem);
